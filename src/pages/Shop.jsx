@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import ProductCard from '../components/ProductCard'
+import ProductCardShadcn from '../components/ProductCardShadcn'
 import ProductCardSkeleton from '../components/ProductCardSkeleton'
 import AnimatedPage from '../components/AnimatedPage'
 import { products, getCategories } from '../data/products'
@@ -12,7 +12,6 @@ const Shop = () => {
   
   const categories = ['All', ...getCategories()]
   
-  // Simulate loading
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false)
@@ -20,7 +19,6 @@ const Shop = () => {
     return () => clearTimeout(timer)
   }, [])
   
-  // Filter products based on category and search
   const filteredProducts = products.filter(product => {
     const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -31,7 +29,6 @@ const Shop = () => {
     <AnimatedPage>
       <div className="min-h-screen pt-20">
         <div className="container mx-auto px-4 py-8">
-          {/* Header with Animation */}
           <motion.h1 
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -40,14 +37,12 @@ const Shop = () => {
             Shop All Products
           </motion.h1>
           
-          {/* Filters */}
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="flex flex-col md:flex-row justify-between gap-4 mb-8"
           >
-            {/* Search Bar */}
             <input
               type="text"
               placeholder="Search products..."
@@ -56,7 +51,6 @@ const Shop = () => {
               className="px-4 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary md:w-64"
             />
             
-            {/* Category Filter */}
             <div className="flex flex-wrap gap-2">
               {categories.map((category) => (
                 <motion.button
@@ -76,7 +70,6 @@ const Shop = () => {
             </div>
           </motion.div>
           
-          {/* Results Count */}
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -86,7 +79,6 @@ const Shop = () => {
             Showing {filteredProducts.length} of {products.length} products
           </motion.p>
           
-          {/* Product Grid with Animation */}
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {[...Array(8)].map((_, index) => (
@@ -120,7 +112,8 @@ const Shop = () => {
                       exit={{ opacity: 0, y: -50 }}
                       layout
                     >
-                      <ProductCard product={product} />
+                      {/* FIXED: Using ProductCardShadcn instead of ProductCard */}
+                      <ProductCardShadcn product={product} />
                     </motion.div>
                   ))}
                 </motion.div>

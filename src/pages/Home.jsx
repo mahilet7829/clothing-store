@@ -1,227 +1,328 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import ProductCard from '../components/ProductCard'
-import ProductCardSkeleton from '../components/ProductCardSkeleton'
-import AnimatedPage from '../components/AnimatedPage'
-import GradientButton from '../components/ui/GradientButton'
+import { Link } from 'react-router-dom'
+import { ArrowRight, Star, Truck, RotateCcw, Shield } from 'lucide-react'
+import ProductCardShadcn from '../components/ProductCardShadcn'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
 import { products } from '../data/products'
 
 const Home = () => {
   const [loading, setLoading] = useState(true)
   const featuredProducts = products.slice(0, 4)
+  const newArrivals = products.slice(4, 8)
 
-  // Simulate loading delay
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false)
-    }, 1500) // 1.5 seconds loading for demo
+    }, 1500)
     return () => clearTimeout(timer)
   }, [])
 
-  // Animation variants for hero section
-  const heroVariants = {
-    hidden: { opacity: 0, y: -50 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut" }
-    }
+  // Updated Categories for your store (Hotel Wear focused)
+  const categories = [
+    { name: 'Hotel Wear', icon: '🏨', color: 'from-blue-500 to-cyan-500' },
+    { name: 'Uniforms', icon: '👔', color: 'from-purple-500 to-pink-500' },
+    { name: 'Accessories', icon: '🧢', color: 'from-orange-500 to-red-500' },
+  ]
+
+  const features = [
+    { icon: Truck, title: 'Free Shipping', description: 'On orders over $50' },
+    { icon: RotateCcw, title: 'Easy Returns', description: '30 day return policy' },
+    { icon: Shield, title: 'Secure Order', description: '100% secure checkout' },
+    { icon: Star, title: 'Premium Quality', description: 'Best materials used' },
+  ]
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
+    },
   }
 
-  const buttonVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { 
-      opacity: 1, 
-      scale: 1,
-      transition: { delay: 0.5, duration: 0.5 }
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: 'easeOut' },
     },
-    hover: { 
-      scale: 1.05,
-      transition: { duration: 0.2 }
-    },
-    tap: { scale: 0.95 }
   }
 
   return (
-    <AnimatedPage>
-      <div className="min-h-screen">
-        {/* Hero Section - Premium Design */}
-<motion.section 
-  className="relative min-h-[90vh] flex items-center overflow-hidden"
-  initial="hidden"
-  animate="visible"
->
-  {/* Background Image with Overlay */}
-  <div className="absolute inset-0">
-    <img 
-      src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1600"
-      alt="Fashion background"
-      className="w-full h-full object-cover"
-    />
-    <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
-  </div>
-  
-  {/* Content */}
-  <div className="relative container mx-auto px-4 z-10">
-    <motion.div
-      initial={{ opacity: 0, x: -50 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.8 }}
-      className="max-w-2xl text-white"
-    >
-      <motion.span 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="text-accent font-semibold tracking-wider uppercase text-sm mb-4 block"
-      >
-        New Collection 2024
-      </motion.span>
-      
-      <motion.h1 
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="text-6xl md:text-8xl font-bold mb-6 font-serif"
-      >
-        Style That<br />Defines You
-      </motion.h1>
-      
-      <motion.p 
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="text-xl md:text-2xl mb-8 text-gray-200 max-w-lg"
-      >
-        Discover premium fashion with effortless ordering via WhatsApp & Telegram
-      </motion.p>
-      
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="flex gap-4"
-      >
-        <GradientButton variant="primary">
-          Shop Now
-        </GradientButton>
-        <GradientButton variant="outline">
-          View Collection
-        </GradientButton>
-      </motion.div>
-    </motion.div>
-  </div>
-  
-  {/* Scroll indicator */}
-  <motion.div 
-    className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-    animate={{ y: [0, 10, 0] }}
-    transition={{ repeat: Infinity, duration: 2 }}
-  >
-    <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-      <div className="w-1 h-2 bg-white rounded-full mt-2"></div>
-    </div>
-  </motion.div>
-</motion.section>
-        {/* Featured Products with Loading Skeletons */}
-        <section className="container mx-auto px-4 py-16">
-          <motion.h2 
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1600&q=80"
+            alt="Fashion background"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
+        </div>
+
+        <div className="relative container mx-auto px-4 z-10">
+          <motion.div
             initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl font-bold text-center mb-4"
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="max-w-2xl text-white"
           >
-            Featured Collection
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-center text-foreground/70 mb-12"
-          >
-            Our most popular items this season
-          </motion.p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {loading ? (
-              // Show skeletons while loading
-              <>
-                <ProductCardSkeleton />
-                <ProductCardSkeleton />
-                <ProductCardSkeleton />
-                <ProductCardSkeleton />
-              </>
-            ) : (
-              // Show actual products
-              featuredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))
-            )}
-          </div>
-        </section>
-
-        {/* Categories Section with Scroll Animation */}
-        <motion.section 
-          className="bg-secondary py-16"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-4">Shop by Category</h2>
-            <p className="text-center text-foreground/70 mb-12">Find what you're looking for</p>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {['T-Shirts', 'Hoodies', 'Pants', 'Accessories'].map((category, index) => (
-                <motion.div 
-                  key={category}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="relative group cursor-pointer"
-                >
-                  <div className="aspect-square bg-gray-300 dark:bg-gray-700 rounded-lg overflow-hidden">
-                    <div className="w-full h-full bg-gradient-to-br from-gray-400 to-gray-600 group-hover:scale-110 transition duration-500"></div>
-                  </div>
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition flex items-center justify-center rounded-lg">
-                    <span className="text-white font-semibold text-lg">{category}</span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </motion.section>
-
-        {/* CTA Section */}
-        <motion.section 
-          className="container mx-auto px-4 py-16 text-center"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold mb-4">Ready to Upgrade Your Style?</h2>
-            <p className="text-foreground/70 mb-8">
-              Browse our collection and order directly through WhatsApp or Telegram.
-              Fast shipping and easy returns.
-            </p>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition"
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="mb-4"
             >
-              View All Products
-            </motion.button>
+              <Badge variant="secondary" className="bg-accent text-black hover:bg-accent/90">
+                New Collection 2024
+              </Badge>
+            </motion.div>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 font-serif leading-tight"
+            >
+              Professional
+              <br />
+              Hotel Wear
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="text-lg md:text-xl mb-8 text-gray-200 max-w-lg"
+            >
+              Premium quality uniforms and hotel wear. Order directly via WhatsApp or Telegram.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="flex flex-col sm:flex-row gap-4"
+            >
+              <Button asChild size="lg" className="bg-white text-black hover:bg-gray-100">
+                <Link to="/shop">
+                  <span className="flex items-center justify-center">
+                    Shop Now
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </span>
+                </Link>
+              </Button>
+
+              <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+                <Link to="/about">
+                  Learn More
+                </Link>
+              </Button>
+            </motion.div>
+          </motion.div>
+        </div>
+
+        <motion.div
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ repeat: Infinity, duration: 2 }}
+        >
+          <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
+            <div className="w-1 h-2 bg-white rounded-full mt-2"></div>
           </div>
-        </motion.section>
-      </div>
-    </AnimatedPage>
+        </motion.div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-16 bg-secondary/50">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card className="text-center border-none shadow-none bg-transparent">
+                  <CardContent className="pt-6">
+                    <feature.icon className="h-12 w-12 mx-auto mb-4 text-primary" />
+                    <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
+                    <p className="text-sm text-muted-foreground">{feature.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Products */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <Badge variant="secondary" className="mb-4">Featured Collection</Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Products</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Discover our premium hotel wear and uniform collection.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
+            {featuredProducts.map((product, index) => (
+              <motion.div key={product.id} variants={itemVariants}>
+                <ProductCardShadcn product={product} />
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <Button asChild size="lg" variant="outline">
+              <Link to="/shop">
+                <span className="flex items-center justify-center">
+                  View All Products
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </span>
+              </Link>
+            </Button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Categories Section */}
+      <section className="py-20 bg-secondary/30">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <Badge variant="secondary" className="mb-4">Shop by Category</Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Browse Collections</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Find exactly what you're looking for
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {categories.map((category, index) => (
+              <motion.div
+                key={category.name}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <Link to={`/shop?category=${category.name.toLowerCase()}`}>
+                  <Card className="overflow-hidden cursor-pointer group">
+                    <div className={`aspect-square bg-gradient-to-br ${category.color} flex items-center justify-center`}>
+                      <span className="text-6xl">{category.icon}</span>
+                    </div>
+                    <CardContent className="p-4 text-center">
+                      <h3 className="font-semibold text-lg">{category.name}</h3>
+                      <p className="text-sm text-muted-foreground">Shop Now →</p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* New Arrivals Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <Badge variant="secondary" className="mb-4">Just In</Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">New Arrivals</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Fresh styles just landed
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {newArrivals.map((product, index) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <ProductCardShadcn product={product} />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-gray-900 to-gray-800 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-3xl mx-auto"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Ready to Order?
+            </h2>
+            <p className="text-lg mb-8 text-gray-300">
+              Contact us directly via WhatsApp or Telegram for pricing and orders.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-white text-black hover:bg-gray-100">
+                <Link to="/shop">
+                  <span className="flex items-center justify-center">
+                    Shop Now
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </span>
+                </Link>
+              </Button>
+
+              <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+                <Link to="/contact">
+                  Contact Us
+                </Link>
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+    </div>
   )
 }
 
