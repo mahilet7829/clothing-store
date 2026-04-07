@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
 import { ArrowRight, Star, Truck, RotateCcw, Shield } from 'lucide-react'
 import ProductCardShadcn from '../components/ProductCardShadcn'
 import { Button } from '@/components/ui/button'
@@ -12,6 +12,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true)
   const featuredProducts = products.slice(0, 4)
   const newArrivals = products.slice(4, 8)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -20,7 +21,7 @@ const Home = () => {
     return () => clearTimeout(timer)
   }, [])
 
-  // Updated Categories for your store (Hotel Wear focused)
+  // Categories for your store
   const categories = [
     { name: 'Hotel Wear', icon: '🏨', color: 'from-blue-500 to-cyan-500' },
     { name: 'Uniforms', icon: '👔', color: 'from-purple-500 to-pink-500' },
@@ -56,88 +57,56 @@ const Home = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
-        <div className="absolute inset-0">
+      {/* Hero Section - Premium Fullscreen */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1600&q=80"
-            alt="Fashion background"
+            src="https://i.pinimg.com/1200x/b0/27/c8/b027c8733b8f76a71be88d7ff7189bea.jpg"
+            alt="Hero"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
+          <div className="absolute inset-0 bg-black/40" />
         </div>
-
-        <div className="relative container mx-auto px-4 z-10">
+        
+        <div className="relative z-10 text-center text-white px-4 max-w-4xl">
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="max-w-2xl text-white"
           >
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="mb-4"
-            >
-              <Badge variant="secondary" className="bg-accent text-black hover:bg-accent/90">
-                New Collection 2024
-              </Badge>
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 font-serif leading-tight"
-            >
-              Professional
+            <span className="text-sm tracking-[0.3em] uppercase mb-4 block">New Collection 2026</span>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter">
+              PROFESSIONAL
               <br />
-              Hotel Wear
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="text-lg md:text-xl mb-8 text-gray-200 max-w-lg"
-            >
-              Premium quality uniforms and hotel wear. Order directly via WhatsApp or Telegram.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="flex flex-col sm:flex-row gap-4"
-            >
-              <Button asChild size="lg" className="bg-white text-black hover:bg-gray-100">
-                <Link to="/shop">
-                  <span className="flex items-center justify-center">
-                    Shop Now
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </span>
-                </Link>
-              </Button>
-
-              <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                <Link to="/about">
-                  Learn More
-                </Link>
-              </Button>
-            </motion.div>
+              HOTEL WEAR
+            </h1>
+            <p className="text-lg md:text-xl mt-6 max-w-2xl mx-auto font-light">
+              Premium quality uniforms for hospitality professionals.
+              Order directly via WhatsApp.
+            </p>
+            <div className="mt-10 flex gap-4 justify-center">
+              <button 
+                onClick={() => navigate('/shop')}
+                className="bg-white text-black px-8 py-3 text-sm tracking-wide font-medium hover:bg-black hover:text-white transition duration-300"
+              >
+                SHOP NOW
+              </button>
+              <button 
+                onClick={() => navigate('/contact')}
+                className="border border-white px-8 py-3 text-sm tracking-wide font-medium hover:bg-white hover:text-black transition duration-300"
+              >
+                CONTACT US
+              </button>
+            </div>
           </motion.div>
         </div>
-
-        <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-        >
+        
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
           <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-            <div className="w-1 h-2 bg-white rounded-full mt-2"></div>
+            <div className="w-1 h-2 bg-white rounded-full mt-2 animate-pulse" />
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* Features Section */}
@@ -288,6 +257,63 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Custom Design Section - NEW */}
+      <section className="py-24 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <span className="text-xs tracking-[0.2em] uppercase text-gray-500 mb-4 block">
+                Custom Orders
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                Create Your Own Design
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
+                Have a unique idea? We bring your vision to life. Send us your design, 
+                and we'll create custom clothing just for you.
+              </p>
+              
+              {/* Features Grid */}
+              <div className="grid md:grid-cols-3 gap-8 mt-12">
+                <div className="text-center">
+                  <div className="text-3xl mb-3">✏️</div>
+                  <h3 className="font-semibold mb-2">Send Your Design</h3>
+                  <p className="text-sm text-gray-500">Share your sketch, photo, or idea</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl mb-3">👔</div>
+                  <h3 className="font-semibold mb-2">We Create It</h3>
+                  <p className="text-sm text-gray-500">Our team crafts your custom piece</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl mb-3">📦</div>
+                  <h3 className="font-semibold mb-2">Delivered to You</h3>
+                  <p className="text-sm text-gray-500">Quality guaranteed, ready to wear</p>
+                </div>
+              </div>
+              
+              {/* WhatsApp Button for Custom Orders */}
+              <div className="mt-10">
+                <button
+                  onClick={() => window.open('https://wa.me/251933912682?text=Hello!%20I%20have%20a%20custom%20design%20idea%20I%27d%20like%20to%20discuss.', '_blank')}
+                  className="bg-black text-white px-8 py-3 text-sm tracking-wide font-medium hover:bg-gray-800 transition duration-300 inline-flex items-center gap-2"
+                >
+                  📱 Send Your Design on WhatsApp
+                </button>
+                <p className="text-xs text-gray-400 mt-4">
+                  Feel free to share your inspiration - we'll help bring it to life!
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-gray-900 to-gray-800 text-white">
         <div className="container mx-auto px-4 text-center">
@@ -312,7 +338,6 @@ const Home = () => {
                   </span>
                 </Link>
               </Button>
-
               <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
                 <Link to="/contact">
                   Contact Us

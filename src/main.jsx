@@ -7,7 +7,7 @@ import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/clothing-store">
       <AnimatePresence mode="wait">
         <App />
       </AnimatePresence>

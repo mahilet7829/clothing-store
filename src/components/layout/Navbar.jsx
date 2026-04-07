@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, ShoppingBag, Phone } from 'lucide-react'
+import { Menu, X, ShoppingBag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -9,45 +9,47 @@ import {
   SheetDescription,
   SheetTrigger,
 } from '@/components/ui/sheet'
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const location = useLocation()
 
   const navLinks = [
-    { path: '/', label: 'Home' },
-    { path: '/shop', label: 'Shop' },
-    { path: '/about', label: 'About' },
-    { path: '/contact', label: 'Contact' },
+    { path: '/', label: 'HOME' },
+    { path: '/shop', label: 'SHOP' },
+    { path: '/about', label: 'ABOUT' },
+    { path: '/contact', label: 'CONTACT' },
   ]
 
   const isActive = (path) => location.pathname === path
 
   return (
-    <nav className="fixed top-0 w-full bg-background/95 backdrop-blur-md border-b border-border z-50">
+    <nav className="fixed top-0 w-full bg-white dark:bg-black border-b border-gray-100 dark:border-gray-900 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <ShoppingBag className="h-6 w-6" />
-            <span className="font-bold text-xl">ለWE Clothing</span>
+            <ShoppingBag className="h-5 w-5" />
+            <span className="text-sm tracking-wider font-light uppercase">
+              ለWE CLOTHING
+            </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
+          {/* Desktop Navigation - Minimal Style */}
+          <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
-              <Button
+              <Link
                 key={link.path}
-                variant={isActive(link.path) ? "default" : "ghost"}
-                asChild
-                className="text-base"
+                to={link.path}
+                className={`text-xs tracking-wider font-light uppercase transition-colors hover:text-gray-500 ${
+                  isActive(link.path) 
+                    ? 'text-black dark:text-white' 
+                    : 'text-gray-400'
+                }`}
               >
-                <Link to={link.path}>{link.label}</Link>
-              </Button>
+                {link.label}
+              </Link>
             ))}
-            <Button variant="outline" className="ml-4 gap-2">
-              <Phone className="h-4 w-4" />
-              Contact
-            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -57,30 +59,28 @@ const Navbar = () => {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-           <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-  {/* Add title for accessibility - visually hidden but readable by screen readers */}
-  <div className="sr-only">
-    <SheetTitle>Navigation Menu</SheetTitle>
-    <SheetDescription>Browse pages on ለWE Clothing</SheetDescription>
-  </div>
-  <div className="flex flex-col gap-4 mt-8">
-    {navLinks.map((link) => (
-      <Button
-        key={link.path}
-        variant={isActive(link.path) ? "default" : "ghost"}
-        asChild
-        className="justify-start text-lg"
-        onClick={() => setIsOpen(false)}
-      >
-        <Link to={link.path}>{link.label}</Link>
-      </Button>
-    ))}
-    <Button variant="outline" className="gap-2 mt-4">
-      <Phone className="h-4 w-4" />
-      Contact Sales
-    </Button>
-  </div>
-</SheetContent>
+            <SheetContent side="right" className="w-[300px] bg-white dark:bg-black border-l border-gray-100 dark:border-gray-900">
+              <div className="sr-only">
+                <SheetTitle>Navigation Menu</SheetTitle>
+                <SheetDescription>Browse pages on ለWE Clothing</SheetDescription>
+              </div>
+              <div className="flex flex-col gap-6 mt-12">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setIsOpen(false)}
+                    className={`text-sm tracking-wider font-light uppercase transition-colors hover:text-gray-500 ${
+                      isActive(link.path) 
+                        ? 'text-black dark:text-white' 
+                        : 'text-gray-400'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </SheetContent>
           </Sheet>
         </div>
       </div>
