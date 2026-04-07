@@ -76,9 +76,8 @@ const Home = () => {
           >
             <span className="text-sm tracking-[0.3em] uppercase mb-4 block">New Collection 2026</span>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter">
-              PROFESSIONAL
-              <br />
-              HOTEL WEAR
+
+              ለWE CLOTHING
             </h1>
             <p className="text-lg md:text-xl mt-6 max-w-2xl mx-auto font-light">
               Premium quality uniforms for hospitality professionals.

@@ -4,7 +4,6 @@ export const products = [
     id: 1,
     name: "Table Cloth",
     category: "Hotel Wear",
-    description: "Beautiful hand-woven traditional Ethiopian kemis with intricate embroidery along the borders and sleeves. Made from 100% premium cotton for maximum comfort. Perfect for holidays, weddings, and special occasions.",
     image: "https://i.pinimg.com/736x/b4/c6/18/b4c61848b02a56a8e94923e7ae5be186.jpg",
     images: [
       "https://i.pinimg.com/736x/14/51/67/1451677a5991510065481d4c42abd1e6.jpg",
@@ -102,7 +101,6 @@ export const products = [
     id: 8,
     name: "Technical Uniform",
     category: "Hotel Wear",
-    description: "Beautiful hand-woven traditional Ethiopian scarf.",
     image: "https://i.pinimg.com/736x/6b/05/35/6b053501949cc6ef9ed912f1a2747131.jpg",
     images: [
       "https://i.pinimg.com/736x/32/d9/39/32d93941fb9536532237d8058e57002a.jpg",
