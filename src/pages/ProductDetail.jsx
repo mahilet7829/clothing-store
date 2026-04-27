@@ -1,238 +1,186 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingBag, Send, ChevronLeft, Truck, RotateCcw, Shield, X, ZoomIn } from 'lucide-react'
-import { getProductById, products } from '../data/Products'
+import { 
+  ChevronLeft, Truck, RotateCcw, Shield, X, ZoomIn, 
+  Plus, Minus, MessageCircle, Send, ShoppingBag 
+} from 'lucide-react'
+import { getProductById } from '../data/Products'
 
-const ProductDetail = () => {
+const ProductDetail = ({ addToCart }) => {
   const { id } = useParams()
   const navigate = useNavigate()
-
   const product = getProductById(id)
 
   const [quantity, setQuantity] = useState(1)
   const [mainImage, setMainImage] = useState('')
-  const [selectedImageForOrder, setSelectedImageForOrder] = useState('')
-
-  // Zoom Modal
   const [isZoomOpen, setIsZoomOpen] = useState(false)
-  const [zoomImageSrc, setZoomImageSrc] = useState('')
 
-  // Safe initialization
   useEffect(() => {
     if (!product) return
-
-    const initialImage = product.image || product.images?.[0] || 
-      'https://i.pinimg.com/736x/aa/72/09/aa72098ee0559b84056ccdb95646e336.jpg'
-
+    const initialImage = product.image || product.images?.[0]
     setMainImage(initialImage)
-    setSelectedImageForOrder(initialImage)
   }, [product])
 
-  const openZoom = (src) => {
-    if (src) {
-      setZoomImageSrc(src)
-      setIsZoomOpen(true)
-      document.body.style.overflow = 'hidden'
-    }
-  }
-
-  const closeZoom = () => {
-    setIsZoomOpen(false)
-    document.body.style.overflow = 'unset'
-  }
-
-  // Order handlers
-  const handleWhatsAppOrder = () => {
-    if (!product) return
-    const message = `Hello, I want to order:\n\nProduct: ${product.name}\nImage: ${selectedImageForOrder}\nQuantity: ${quantity}\n\nShipping to: [Please provide your address]`
-    window.open(`https://wa.me/251933912682?text=${encodeURIComponent(message)}`, '_blank')
-  }
-
-  const handleTelegramOrder = () => {
-    if (!product) return
-    const message = `Hello, I want to order:\n\nProduct: ${product.name}\nImage: ${selectedImageForOrder}\nQuantity: ${quantity}\n\nShipping to: [Please provide your address]`
-    window.open(`https://t.me/Azebgizaw?text=${encodeURIComponent(message)}`, '_blank')
-  }
-
-  const relatedProducts = products
-    .filter(p => p.category === product?.category && p.id !== product?.id)
-    .slice(0, 4)
-
-  // Show loading / not found
   if (!product) {
     return (
-      <div className="min-h-screen pt-32 text-center">
-        <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
-        <button 
-          onClick={() => navigate('/shop')}
-          className="text-primary underline hover:text-primary/80"
-        >
-          ← Back to Shop
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#0D0D0D] text-white">
+        <h1 className="text-4xl font-serif mb-4">Piece Not Found</h1>
+        <button onClick={() => navigate('/')} className="text-[#C5A059] uppercase tracking-widest text-sm font-bold">
+          ← Back to Collections
         </button>
       </div>
     )
   }
 
   const allImages = product.images?.length > 0 ? product.images : [product.image].filter(Boolean)
-  const hasMultipleImages = allImages.length > 1
 
   return (
-    <div className="min-h-screen pt-20">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-[#0D0D0D] text-[#FDFBF7] selection:bg-[#C5A059]/30 pt-28 pb-20">
+      <div className="container mx-auto px-6">
+        
+        {/* Navigation */}
         <button 
-          onClick={() => navigate('/shop')}
-          className="flex items-center gap-2 text-foreground/70 hover:text-primary mb-8 transition"
+          onClick={() => navigate(-1)}
+          className="group flex items-center gap-3 text-gray-500 hover:text-[#C5A059] mb-12 transition-all font-bold uppercase tracking-[0.2em] text-xs"
         >
-          <ChevronLeft className="h-4 w-4" />
-          Back to Shop
+          <ChevronLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" /> Back to Gallery
         </button>
 
-        <div className="grid md:grid-cols-2 gap-12 mb-16">
-          {/* Image Gallery */}
-          <div className="space-y-4">
-            <div 
-              className="aspect-square bg-secondary rounded-2xl overflow-hidden relative cursor-zoom-in group"
-              onClick={() => openZoom(mainImage)}
-            >
-              <img 
-                src={mainImage} 
-                alt={product.name}
-                className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                onError={(e) => e.target.src = "https://i.pinimg.com/736x/aa/72/09/aa72098ee0559b84056ccdb95646e336.jpg"}
-              />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition">
-                <ZoomIn className="h-12 w-12 text-white opacity-0 group-hover:opacity-100 transition" />
-              </div>
-            </div>
-
-            {hasMultipleImages && (
-              <div className="grid grid-cols-4 gap-3">
-                {allImages.map((img, index) => (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      setMainImage(img)
-                      setSelectedImageForOrder(img)
-                    }}
-                    className={`aspect-square rounded-xl overflow-hidden cursor-pointer border-2 transition-all ${
-                      mainImage === img ? 'border-primary' : 'border-transparent opacity-75 hover:opacity-100'
-                    }`}
-                  >
-                    <img 
-                      src={img} 
-                      alt={`View ${index + 1}`}
-                      className="w-full h-full object-cover"
-                      onError={(e) => e.target.src = "https://i.pinimg.com/736x/aa/72/09/aa72098ee0559b84056ccdb95646e336.jpg"}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Product Info */}
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">{product.name}</h1>
-            <p className="text-foreground/70 mb-4">{product.category || 'Uncategorized'}</p>
-            <div className="text-2xl font-bold mb-6 text-primary">Contact for Price</div>
-
-            <p className="text-foreground/70 mb-8 leading-relaxed">
-              {product.description || 'No description available.'}
-            </p>
-
-            {product.colors?.length > 0 && (
-              <div className="mb-8">
-                <label className="font-semibold block mb-3">Available Colors</label>
-                <div className="flex flex-wrap gap-3">
-                  {product.colors.map((color) => (
-                    <span key={color} className="px-5 py-2.5 bg-secondary border rounded-xl text-sm">
-                      {color}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="mb-8">
-              <label className="font-semibold block mb-3">Quantity</label>
-              <div className="flex items-center gap-4">
-                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-12 h-12 border rounded-xl hover:border-primary text-2xl">-</button>
-                <span className="text-2xl font-semibold w-14 text-center">{quantity}</span>
-                <button onClick={() => setQuantity(quantity + 1)} className="w-12 h-12 border rounded-xl hover:border-primary text-2xl">+</button>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <button
-                onClick={handleWhatsAppOrder}
-                disabled={!product.inStock}
-                className={`w-full py-4 rounded-2xl font-semibold flex items-center justify-center gap-3 text-lg ${product.inStock ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-gray-400 cursor-not-allowed'}`}
-              >
-                <ShoppingBag className="h-6 w-6" /> Order via WhatsApp
-              </button>
-
-              <button
-                onClick={handleTelegramOrder}
-                disabled={!product.inStock}
-                className={`w-full py-4 rounded-2xl font-semibold flex items-center justify-center gap-3 text-lg ${product.inStock ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-400 cursor-not-allowed'}`}
-              >
-                <Send className="h-6 w-6" /> Order via Telegram
-              </button>
-            </div>
-
-            <div className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-border">
-              <div className="text-center"><Truck className="h-7 w-7 mx-auto mb-2 text-muted-foreground" /><p className="text-sm">Free Shipping</p></div>
-              <div className="text-center"><RotateCcw className="h-7 w-7 mx-auto mb-2 text-muted-foreground" /><p className="text-sm">Easy Returns</p></div>
-              <div className="text-center"><Shield className="h-7 w-7 mx-auto mb-2 text-muted-foreground" /><p className="text-sm">Secure Order</p></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Related Products */}
-        {relatedProducts.length > 0 && (
-          <div className="mt-16">
-            <h2 className="text-2xl font-bold mb-8">You May Also Like</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {relatedProducts.map((p) => (
-                <div key={p.id} onClick={() => navigate(`/product/${p.id}`)} className="cursor-pointer group">
-                  <div className="aspect-square bg-secondary rounded-2xl overflow-hidden mb-4">
-                    <img src={p.image} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition" />
-                  </div>
-                  <h3 className="font-semibold">{p.name}</h3>
-                  <p className="text-sm text-foreground/70">Contact for Price</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Simple Zoom Modal */}
-      <AnimatePresence>
-        {isZoomOpen && (
-          <div className="fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4" onClick={closeZoom}>
+        <div className="grid lg:grid-cols-2 gap-16 items-start">
+          
+          {/* LEFT: Image Gallery */}
+          <div className="space-y-6">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="relative max-w-5xl w-full"
-              onClick={e => e.stopPropagation()}
+              className="aspect-[4/5] bg-[#161616] rounded-[3rem] overflow-hidden relative cursor-zoom-in group border border-white/5 shadow-2xl"
+              onClick={() => setIsZoomOpen(true)}
             >
-              <button
-                onClick={closeZoom}
-                className="absolute -top-4 -right-4 bg-black text-white p-3 rounded-full shadow-lg"
-              >
-                <X className="h-6 w-6" />
-              </button>
-
-              <img 
-                src={zoomImageSrc} 
-                alt={product.name}
-                className="max-h-[90vh] w-auto mx-auto object-contain rounded-2xl"
-              />
+              <img src={mainImage} alt={product.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <div className="bg-white/10 backdrop-blur-md p-4 rounded-full border border-white/20">
+                  <ZoomIn className="h-6 w-6 text-white" />
+                </div>
+              </div>
             </motion.div>
+
+            <div className="grid grid-cols-4 gap-4">
+              {allImages.map((img, index) => (
+                <motion.div
+                  whileHover={{ y: -5 }}
+                  key={index}
+                  onClick={() => setMainImage(img)}
+                  className={`aspect-square rounded-2xl overflow-hidden cursor-pointer border-2 transition-all ${
+                    mainImage === img ? 'border-[#C5A059] scale-95' : 'border-transparent opacity-50 hover:opacity-100'
+                  }`}
+                >
+                  <img src={img} alt="Thumbnail" className="w-full h-full object-cover" />
+                </motion.div>
+              ))}
+            </div>
           </div>
+
+          {/* RIGHT: Product Info */}
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex flex-col h-full"
+          >
+            <span className="text-[#C5A059] font-bold uppercase tracking-[0.4em] text-[10px] mb-4">
+              {product.category || 'Handcrafted Heritage'}
+            </span>
+            <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 text-white leading-tight">
+              {product.name}
+            </h1>
+            
+            <div className="flex items-center gap-4 mb-8">
+              <span className="text-3xl font-black text-white tracking-tighter">
+                {product.price} <span className="text-sm text-[#C5A059] uppercase ml-1 font-bold">ETB</span>
+              </span>
+              <div className="h-4 w-[1px] bg-white/10" />
+              <span className="text-gray-500 text-sm uppercase tracking-widest">In Stock</span>
+            </div>
+
+            <p className="text-gray-400 text-lg leading-relaxed font-light mb-10 border-l-2 border-[#C5A059]/30 pl-6">
+              {product.description || 'This exquisite piece showcases the pinnacle of Ethiopian craftsmanship, using ethically sourced materials and traditional hand-weaving techniques.'}
+            </p>
+
+            {/* Quantity Selector */}
+            <div className="mb-10">
+              <h4 className="text-[10px] uppercase tracking-widest font-bold text-gray-500 mb-4">Select Quantity</h4>
+              <div className="flex items-center gap-6">
+                <div className="flex items-center bg-[#1A1A1A] rounded-full border border-white/10 p-1">
+                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-12 h-12 flex items-center justify-center hover:text-[#C5A059] transition-colors"><Minus size={16}/></button>
+                  <span className="text-lg font-bold w-12 text-center text-white">{quantity}</span>
+                  <button onClick={() => setQuantity(quantity + 1)} className="w-12 h-12 flex items-center justify-center hover:text-[#C5A059] transition-colors"><Plus size={16}/></button>
+                </div>
+              </div>
+            </div>
+
+            {/* Main Actions */}
+            <div className="space-y-4 mb-12">
+              <button
+                onClick={() => addToCart({ ...product, qty: quantity })}
+                className="w-full py-6 bg-[#C5A059] text-[#0D0D0D] rounded-full font-black tracking-widest uppercase hover:scale-[1.02] transition-all flex items-center justify-center gap-3 shadow-[0_10px_30px_rgba(197,160,89,0.2)]"
+              >
+                <ShoppingBag size={20} /> Add to Collection
+              </button>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  onClick={() => window.open(`https://wa.me interested in the ${product.name}`)}
+                  className="py-5 border border-white/10 text-white rounded-full font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 text-[10px]"
+                >
+                  <MessageCircle size={14} /> WhatsApp
+                </button>
+                <button
+                  onClick={() => window.open(`https://t.me/Azebgizaw`)}
+                  className="py-5 border border-white/10 text-white rounded-full font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 text-[10px]"
+                >
+                  <Send size={14} /> Telegram
+                </button>
+              </div>
+            </div>
+
+            {/* Detail Badges */}
+            <div className="grid grid-cols-3 gap-4 pt-10 border-t border-white/5">
+              {[
+                { icon: <Truck />, label: "Global", sub: "Delivery" },
+                { icon: <RotateCcw />, label: "7 Day", sub: "Exchange" },
+                { icon: <Shield />, label: "Verified", sub: "Quality" }
+              ].map((badge, idx) => (
+                <div key={idx} className="text-center group">
+                  <div className="text-[#C5A059] mb-2 flex justify-center group-hover:scale-110 transition-transform">{badge.icon}</div>
+                  <p className="text-[10px] font-black uppercase text-white mb-1">{badge.label}</p>
+                  <p className="text-[9px] uppercase tracking-widest text-gray-500">{badge.sub}</p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Modern Zoom Overlay */}
+      <AnimatePresence>
+        {isZoomOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-[#0D0D0D]/95 z-[100] flex items-center justify-center p-6 cursor-zoom-out" 
+            onClick={() => setIsZoomOpen(false)}
+          >
+            <button className="absolute top-10 right-10 text-white bg-white/10 p-4 rounded-full border border-white/20 hover:bg-[#C5A059] hover:text-black transition-all">
+              <X />
+            </button>
+            <motion.img 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              src={mainImage} 
+              className="max-h-[85vh] rounded-3xl shadow-2xl object-contain border border-white/10" 
+            />
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
